@@ -23,15 +23,16 @@ matrix:
           packages:
             - clang-3.5
             - valgrind
+            - cmake
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.5
 
- 
+
     - env: CLANG_VERSION=3.5 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=On
       os: linux
       addons: *clang35
-    
+
 
 
 # Test gcc-4.8: C++11, Build=Debug/Release, ASAN=Off
@@ -42,13 +43,14 @@ matrix:
           packages:
             - g++-4.8
             - valgrind
+            - cmake
           sources:
             - ubuntu-toolchain-r-test
 
     - env: GCC_VERSION=4.8 BUILD_TYPE=Release CPP=11 ASAN=Off LIBCXX=Off
       os: linux
       addons: *gcc48
-      
+
     # Test gcc-4.9: C++11, Build=Debug/Release, ASAN=Off
     - env: GCC_VERSION=4.9 BUILD_TYPE=Debug CPP=11 ASAN=Off LIBCXX=Off
       os: linux
@@ -57,6 +59,7 @@ matrix:
           packages:
             - g++-4.9
             - valgrind
+            - cmake
           sources:
             - ubuntu-toolchain-r-test
 
@@ -91,18 +94,17 @@ install:
   - if [ -n "$CLANG_VERSION" ]; then CXX_FLAGS="${CXX_FLAGS} -D__extern_always_inline=inline"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_FLAGS="${CXX_FLAGS} -stdlib=libc++ -I/usr/include/c++/v1/"; fi
   - if [ "$LIBCXX" == "On" ]; then CXX_LINKER_FLAGS="${CXX_FLAGS} -L/usr/lib/ -lc++"; fi
-  - CXX_FLAGS="${CXX_FLAGS} -std=c++${CPP}"
 
   # Build examples
-  - cd example
-  - if [ "$BUILD_TYPE" == "Release" ]; then make rebuild CXXFLAGS="${CXX_FLAGS} ${CXX_LINKER_FLAGS}" VERBOSE=1; export BIN=example; fi
-  - if [ "$BUILD_TYPE" == "Debug" ]; then make rebuild debug CXXFLAGS="${CXX_FLAGS} ${CXX_LINKER_FLAGS}" VERBOSE=1; export BIN=example-debug; fi
-  
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_FLAGS=$CXX_FLAGS -DBUILD_TESTING=ON -DBUILD_EXAMPLE=ON ..
+  - make VERBOSE=1 spdlog-example spdlog-test
 
 script:
-  - ./"${BIN}"
-  - valgrind --trace-children=yes --leak-check=full ./"${BIN}"
-  - cd $CHECKOUT_PATH/tests; make rebuild; ./tests
+  - [ ! -d logs ] && mkdir logs
+  - example/spdlog-example
+  - valgrind --trace-children=yes --leak-check=full example/spdlog-example
+  - tests/spdlog-test
 
 notifications:
   email: false

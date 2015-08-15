@@ -52,9 +52,9 @@ int main(int, char*[])
         //
         // Runtime log levels
         //
-        spd::set_level(spd::level::info); //Set global log level to info
+        spd::set_level(spd::level::level_enum::info); //Set global log level to info
         console->debug("This message shold not be displayed!");
-        console->set_level(spd::level::debug); // Set specific logger's log level
+        console->set_level(spd::level::level_enum::debug); // Set specific logger's log level
         console->debug("Now it should..");
 
         //
@@ -87,10 +87,9 @@ int main(int, char*[])
 
         //
         // Asynchronous logging is very fast..
-        // Just call spdlog::set_async_mode(q_size) and all created loggers from now on will be asynchronous..
+        // Just call spdlog::set_async_mode() and all created loggers from now on will be asynchronous..
         //
-        size_t q_size = 1048576; //queue size must be power of 2
-        spdlog::set_async_mode(q_size);
+        spdlog::set_async_mode();
         auto async_file = spd::daily_logger_st("async_file_logger", "logs/async_log.txt");
         async_file->info() << "This is async log.." << "Should be very fast!";
         spdlog::drop_all(); //Close all loggers

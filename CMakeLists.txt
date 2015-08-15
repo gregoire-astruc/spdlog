@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 project(spdlog CXX)
 enable_testing()
 
+option(BUILD_BENCHMARK "Build the benchmarks." OFF)
+option(BUILD_EXAMPLE "Build the sample program." OFF)
+
 set(${PROJECT_NAME}_SRCS
   src/spdlog.cc
   src/logger.cc
@@ -27,3 +30,7 @@ endif(BUILD_TESTING)
 if (BUILD_BENCHMARK)
     add_subdirectory(bench)
 endif(BUILD_BENCHMARK)
+
+if (BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif(BUILD_EXAMPLE)
