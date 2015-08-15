@@ -51,16 +51,16 @@ public:
     syslog_sink(const std::string& ident = "", int syslog_option=0, int syslog_facility=LOG_USER):
         _ident(ident)
     {
-        _priorities[static_cast<int>(level::trace)] = LOG_DEBUG;
-        _priorities[static_cast<int>(level::debug)] = LOG_DEBUG;
-        _priorities[static_cast<int>(level::info)] = LOG_INFO;
-        _priorities[static_cast<int>(level::notice)] = LOG_NOTICE;
-        _priorities[static_cast<int>(level::warn)] = LOG_WARNING;
-        _priorities[static_cast<int>(level::err)] = LOG_ERR;
-        _priorities[static_cast<int>(level::critical)] = LOG_CRIT;
-        _priorities[static_cast<int>(level::alert)] = LOG_ALERT;
-        _priorities[static_cast<int>(level::emerg)] = LOG_EMERG;
-        _priorities[static_cast<int>(level::off)] = LOG_INFO;
+        _priorities[static_cast<int>(level::level_enum::trace)] = LOG_DEBUG;
+        _priorities[static_cast<int>(level::level_enum::debug)] = LOG_DEBUG;
+        _priorities[static_cast<int>(level::level_enum::info)] = LOG_INFO;
+        _priorities[static_cast<int>(level::level_enum::notice)] = LOG_NOTICE;
+        _priorities[static_cast<int>(level::level_enum::warn)] = LOG_WARNING;
+        _priorities[static_cast<int>(level::level_enum::err)] = LOG_ERR;
+        _priorities[static_cast<int>(level::level_enum::critical)] = LOG_CRIT;
+        _priorities[static_cast<int>(level::level_enum::alert)] = LOG_ALERT;
+        _priorities[static_cast<int>(level::level_enum::emerg)] = LOG_EMERG;
+        _priorities[static_cast<int>(level::level_enum::off)] = LOG_INFO;
 
         //set ident to be program name if empty
         ::openlog(_ident.empty()? nullptr:_ident.c_str(), syslog_option, syslog_facility);

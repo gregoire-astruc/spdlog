@@ -34,7 +34,8 @@
 #include <atomic>
 #include <vector>
 #include <memory>
-#include "common.h"
+
+#include "fwd.h"
 
 namespace spdlog
 {
@@ -130,4 +131,4 @@ protected:
 };
 }
 
-#include "./details/logger_impl.h"
+#include "spdlog/details/logger-inl.h"

@@ -61,8 +61,8 @@ private:
     details::file_helper _file_helper;
 };
 
-typedef simple_file_sink<std::mutex> simple_file_sink_mt;
-typedef simple_file_sink<details::null_mutex> simple_file_sink_st;
+using simple_file_sink_mt = simple_file_sink<std::mutex>;
+using simple_file_sink_st = simple_file_sink<details::null_mutex>;
 
 /*
 * Rotating file sink based on size

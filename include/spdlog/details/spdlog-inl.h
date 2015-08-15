@@ -42,7 +42,3 @@ std::shared_ptr<spdlog::logger> spdlog::create(const std::string& logger_name, c
 {
     return details::registry::instance().create(logger_name, sinks_begin, sinks_end);
 }
-
-#ifndef SPDLOG_LIBRARY
-#include "./spdlog_impl.cc"
-#endif

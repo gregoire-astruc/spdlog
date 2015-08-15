@@ -21,18 +21,14 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#ifdef SPDLOG_LIBRARY
-#include "../formatter.h"
-#else
-#pragma once
-#endif
+#include "spdlog/formatter.h"
 
 #include <mutex>
 
-#include "./flag_formatter.h"
-#include "./log_msg.h"
-#include "./os.h"
-#include "./config.h"
+#include "spdlog/details/flag_formatter.h"
+#include "spdlog/details/log_msg.h"
+#include "spdlog/details/os.h"
+#include "spdlog/details/config.h"
 
 namespace spdlog
 {

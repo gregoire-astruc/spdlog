@@ -24,9 +24,10 @@
 
 #pragma once
 
-#include <thread>
-#include "../common.h"
-#include "./format.h"
+#include "spdlog/fwd.h"
+#include "spdlog/level.h"
+
+#include "spdlog/details/format.h"
 
 namespace spdlog
 {
@@ -82,7 +83,7 @@ struct log_msg
 
     void clear()
     {
-        level = level::off;
+        level = level::level_enum::off;
         raw.clear();
         formatted.clear();
     }

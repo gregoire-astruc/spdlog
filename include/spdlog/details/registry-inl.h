@@ -23,46 +23,33 @@
 /*************************************************************************/
 
 #pragma once
-
-#include <string>
-#include <initializer_list>
-#include <chrono>
-#include <memory>
-
-#include "spdlog/details/compiler.h"
-
+#include "spdlog/logger.h"
 
 namespace spdlog
 {
-
-class formatter;
-
-namespace sinks
+namespace details
 {
-class sink;
+template<typename It>
+std::shared_ptr<logger> registry::create(const std::string& logger_name, const It& sinks_begin, const It& sinks_end)
+{
+
+    std::shared_ptr<logger> new_logger;
+
+    std::lock_guard<mutex_t> lock(_mutex);
+
+
+    if (_async_mode)
+        new_logger = std::make_shared<async_logger>(logger_name, sinks_begin, sinks_end, _worker_warmup_cb, _flush_interval_ms);
+    else
+        new_logger = std::make_shared<logger>(logger_name, sinks_begin, sinks_end);
+
+    if (_formatter)
+        new_logger->set_formatter(_formatter);
+
+    new_logger->set_level(_level);
+    register_logger_impl(new_logger);
+    return new_logger;
 }
+} // ns details
+} // ns spdlog
 
-// Common types across the lib
-using log_clock = std::chrono::system_clock;
-using sink_ptr = std::shared_ptr < sinks::sink >;
-using sinks_init_list = std::initializer_list < sink_ptr >;
-using formatter_ptr = std::shared_ptr<spdlog::formatter>;
-
-
-//
-// Log exception
-//
-class spdlog_ex : public std::exception
-{
-public:
-    spdlog_ex(const std::string& msg) :_msg(msg) {}
-    const char* what() const SPDLOG_NOEXCEPT override
-    {
-        return _msg.c_str();
-    }
-private:
-    std::string _msg;
-
-};
-
-} //spdlog

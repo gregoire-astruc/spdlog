@@ -21,48 +21,37 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+#include "spdlog/async_logger.h"
 
-#pragma once
+#include "spdlog/details/async_log_helper.h"
 
-#include <string>
-#include <initializer_list>
-#include <chrono>
-#include <memory>
+spdlog::async_logger::async_logger(const std::string& logger_name,
+        sinks_init_list sinks,
+        const std::function<void()>& worker_warmup_cb,
+        const std::chrono::milliseconds& flush_interval_ms) :
+    async_logger(logger_name, sinks.begin(), sinks.end(), worker_warmup_cb, flush_interval_ms) {}
 
-#include "spdlog/details/compiler.h"
+spdlog::async_logger::async_logger(const std::string& logger_name,
+        sink_ptr single_sink,
+        const std::function<void()>& worker_warmup_cb,
+        const std::chrono::milliseconds& flush_interval_ms) :
+    async_logger(logger_name, { single_sink }, worker_warmup_cb, flush_interval_ms) {}
 
 
-namespace spdlog
+void spdlog::async_logger::_set_formatter(spdlog::formatter_ptr msg_formatter)
 {
-
-class formatter;
-
-namespace sinks
-{
-class sink;
+    _formatter = msg_formatter;
+    _async_log_helper->set_formatter(_formatter);
 }
 
-// Common types across the lib
-using log_clock = std::chrono::system_clock;
-using sink_ptr = std::shared_ptr < sinks::sink >;
-using sinks_init_list = std::initializer_list < sink_ptr >;
-using formatter_ptr = std::shared_ptr<spdlog::formatter>;
-
-
-//
-// Log exception
-//
-class spdlog_ex : public std::exception
+void spdlog::async_logger::_set_pattern(const std::string& pattern)
 {
-public:
-    spdlog_ex(const std::string& msg) :_msg(msg) {}
-    const char* what() const SPDLOG_NOEXCEPT override
-    {
-        return _msg.c_str();
-    }
-private:
-    std::string _msg;
+    _formatter = std::make_shared<pattern_formatter>(pattern);
+    _async_log_helper->set_formatter(_formatter);
+}
 
-};
 
-} //spdlog
+void spdlog::async_logger::_log_msg(details::log_msg& msg)
+{
+    _async_log_helper->log(msg);
+}

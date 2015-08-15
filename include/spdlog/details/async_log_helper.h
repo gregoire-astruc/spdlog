@@ -35,8 +35,10 @@
 #include <thread>
 #include <vector>
 
-#include "../common.h"
-#include "./mpmc_bounded_q.h"
+
+#include "spdlog/fwd.h"
+#include "spdlog/common.h"
+#include "spdlog/details/concurrentqueue.h"
 
 namespace spdlog
 {
@@ -77,15 +79,13 @@ class async_log_helper
 public:
 
     using item_type = async_msg;
-    using q_type = details::mpmc_bounded_queue<item_type>;
+    using q_type = moodycamel::ConcurrentQueue<item_type>;
 
     using clock = std::chrono::steady_clock;
 
 
     async_log_helper(formatter_ptr formatter,
                      const std::vector<sink_ptr>& sinks,
-                     size_t queue_size,
-                     const async_overflow_policy overflow_policy = async_overflow_policy::block_retry,
                      const std::function<void()>& worker_warmup_cb = nullptr,
                      const std::chrono::milliseconds& flush_interval_ms = std::chrono::milliseconds::zero());
 
@@ -106,9 +106,6 @@ private:
 
     // last exception thrown from the worker thread
     std::shared_ptr<spdlog_ex> _last_workerthread_ex;
-
-    // overflow policy
-    const async_overflow_policy _overflow_policy;
 
     // worker thread warmup callback - one can set thread priority, affinity, etc
     const std::function<void()> _worker_warmup_cb;
@@ -133,13 +130,6 @@ private:
 
     // sleep,yield or return immediatly using the time passed since last message as a hint
     static void sleep_or_yield(const spdlog::log_clock::time_point& now, const log_clock::time_point& last_op_time);
-
-
-
 };
 }
 }
-
-#ifndef SPDLOG_LIBRARY
-#include "./async_log_helper.cc"
-#endif

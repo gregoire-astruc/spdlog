@@ -28,14 +28,11 @@
 // When failing to open a file, retry several times(5) with small delay between the tries(10 ms)
 // Can be set to auto flush on every line
 // Throw spdlog_ex exception on errors
-
-#include <string>
 #include <thread>
+#include <string>
 #include <chrono>
+
 #include "os.h"
-
-
-
 
 namespace spdlog
 {

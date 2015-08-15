@@ -2,7 +2,7 @@
 #include "includes.h"
 
 template<class T>
-std::string log_info(const T& what, spdlog::level::level_enum logger_level = spdlog::level::info)
+std::string log_info(const T& what, spdlog::level::level_enum logger_level = spdlog::level::level_enum::info)
 {
 
     std::ostringstream oss;
@@ -57,13 +57,13 @@ TEST_CASE("basic_logging ", "[basic_logging]")
 
 TEST_CASE("log_levels", "[log_levels]")
 {
-    REQUIRE(log_info("Hello", spdlog::level::err) == "");
-    REQUIRE(log_info("Hello", spdlog::level::critical) == "");
-    REQUIRE(log_info("Hello", spdlog::level::emerg) == "");
-    REQUIRE(log_info("Hello", spdlog::level::alert) == "");
-    REQUIRE(log_info("Hello", spdlog::level::info) == "Hello");
-    REQUIRE(log_info("Hello", spdlog::level::debug) == "Hello");
-    REQUIRE(log_info("Hello", spdlog::level::trace) == "Hello");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::err) == "");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::critical) == "");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::emerg) == "");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::alert) == "");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::info) == "Hello");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::debug) == "Hello");
+    REQUIRE(log_info("Hello", spdlog::level::level_enum::trace) == "Hello");
 }
 
 TEST_CASE("invalid_format", "[format]")

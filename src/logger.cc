@@ -21,15 +21,10 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-
-#ifdef SPDLOG_LIBRARY
-#include "../logger.h"
-#else
-#pragma once
-#endif
-#include "../sinks/sink.h"
-#include "./line_logger.h"
-#include "./config.h"
+#include "spdlog/logger.h"
+#include "spdlog/sinks/sink.h"
+#include "spdlog/details/line_logger.h"
+#include "spdlog/details/config.h"
 
 // ctor with sinks as init list
 SPDLOG_INLINE spdlog::logger::logger(const std::string& logger_name, sinks_init_list sinks_list) :
@@ -71,47 +66,47 @@ SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::_log_if_enabled(level
 //
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::trace()
 {
-    return _log_if_enabled(level::trace);
+    return _log_if_enabled(level::level_enum::trace);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::debug()
 {
-    return _log_if_enabled(level::debug);
+    return _log_if_enabled(level::level_enum::debug);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::info()
 {
-    return _log_if_enabled(level::info);
+    return _log_if_enabled(level::level_enum::info);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::notice()
 {
-    return _log_if_enabled(level::notice);
+    return _log_if_enabled(level::level_enum::notice);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::warn()
 {
-    return _log_if_enabled(level::warn);
+    return _log_if_enabled(level::level_enum::warn);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::error()
 {
-    return _log_if_enabled(level::err);
+    return _log_if_enabled(level::level_enum::err);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::critical()
 {
-    return _log_if_enabled(level::critical);
+    return _log_if_enabled(level::level_enum::critical);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::alert()
 {
-    return _log_if_enabled(level::alert);
+    return _log_if_enabled(level::level_enum::alert);
 }
 
 SPDLOG_INLINE spdlog::details::line_logger spdlog::logger::emerg()
 {
-    return _log_if_enabled(level::emerg);
+    return _log_if_enabled(level::level_enum::emerg);
 }
 
 //
@@ -124,7 +119,7 @@ SPDLOG_INLINE const std::string& spdlog::logger::name() const
 
 SPDLOG_INLINE void spdlog::logger::set_level(spdlog::level::level_enum log_level)
 {
-    _level.store(log_level);
+    _level.store(static_cast<int>(log_level));
 }
 
 SPDLOG_INLINE spdlog::level::level_enum spdlog::logger::level() const
@@ -134,7 +129,7 @@ SPDLOG_INLINE spdlog::level::level_enum spdlog::logger::level() const
 
 SPDLOG_INLINE bool spdlog::logger::should_log(spdlog::level::level_enum msg_level) const
 {
-    return msg_level >= _level.load(std::memory_order_relaxed);
+    return msg_level >= level();
 }
 
 //

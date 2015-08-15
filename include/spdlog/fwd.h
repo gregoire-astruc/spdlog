@@ -21,31 +21,39 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-
 #pragma once
+#include <initializer_list>
+#include <chrono>
+#include <memory>
 
 
-#include "./async_log_helper.h"
-
-//
-// Async Logger implementation
-// Use single async_sink (queue) to perform the logging in a worker thread
-//
-
-
-template<class It>
-inline spdlog::async_logger::async_logger(const std::string& logger_name,
-        const It& begin,
-        const It& end,
-        size_t queue_size,
-        const  async_overflow_policy overflow_policy,
-        const std::function<void()>& worker_warmup_cb,
-        const std::chrono::milliseconds& flush_interval_ms) :
-    logger(logger_name, begin, end),
-    _async_log_helper(new details::async_log_helper(_formatter, _sinks, queue_size, overflow_policy, worker_warmup_cb, flush_interval_ms))
+namespace spdlog
 {
+class logger;
+class async_logger;
+class formatter;
+
+namespace sinks
+{
+class sink;
 }
 
-#ifndef SPDLOG_LIBRARY
-#include "./async_logger_impl.cc"
-#endif
+// Common types across the lib
+using log_clock = std::chrono::system_clock;
+using sink_ptr = std::shared_ptr < sinks::sink >;
+using sinks_init_list = std::initializer_list < sink_ptr >;
+using formatter_ptr = std::shared_ptr<spdlog::formatter>;
+
+namespace level
+{
+    enum class level_enum;
+} // ns level
+
+
+//
+// Async overflow policy - block by default.
+//
+enum class async_overflow_policy;
+
+class spdlog_ex;
+} //spdlog

@@ -22,7 +22,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #pragma once
-#include "../tweakme.h"
+#include "spdlog/tweakme.h"
 #ifdef SPDLOG_LIBRARY
 #define SPDLOG_INLINE
 #else

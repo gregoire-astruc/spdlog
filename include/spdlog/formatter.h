@@ -57,7 +57,3 @@ private:
 };
 }
 
-#ifndef SPDLOG_LIBRARY
-#include "./details/pattern_formatter_impl.cc"
-#endif
-
