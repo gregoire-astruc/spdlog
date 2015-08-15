@@ -106,7 +106,7 @@ install:
 script:
   - if [ ! -d logs ];  then mkdir logs; fi
   - example/spdlog-example
-  - valgrind --trace-children=yes --leak-check=full example/spdlog-example
+  - valgrind --track-origins=yes --show-reachable=yes --trace-children=yes --leak-check=full example/spdlog-example
   - tests/spdlog-test
 
 notifications:
