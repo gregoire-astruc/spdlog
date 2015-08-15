@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(spdlog CXX)
+enable_testing()
+
 set(${PROJECT_NAME}_SRCS
   src/spdlog.cc
   src/logger.cc
@@ -18,5 +20,10 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 target_compile_definitions(${PROJECT_NAME} PUBLIC SPDLOG_LIBRARY)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_subdirectory(tests)
-add_subdirectory(bench)
+if (BUILD_TESTING)
+    add_subdirectory(tests)
+endif(BUILD_TESTING)
+
+if (BUILD_BENCHMARK)
+    add_subdirectory(bench)
+endif(BUILD_BENCHMARK)
