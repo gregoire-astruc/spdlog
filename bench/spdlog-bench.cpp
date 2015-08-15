@@ -1,6 +1,5 @@
 
 #include "spdlog/spdlog.h"
-#include "spdlog/sinks/file_sinks.h"
 
 
 int main(int, char* [])

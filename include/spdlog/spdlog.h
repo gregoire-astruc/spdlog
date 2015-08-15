@@ -29,8 +29,8 @@
 #pragma once
 
 #include "tweakme.h"
-#include "common.h"
 #include "logger.h"
+#include "spdlog/sinks/all.h"
 
 namespace spdlog
 {
@@ -146,4 +146,4 @@ void drop_all();
 }
 
 
-#include "./details/spdlog-inl.h"
+#include "spdlog/details/spdlog-inl.h"
