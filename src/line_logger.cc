@@ -21,12 +21,9 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-
-#pragma once
-#include <type_traits>
-#include "../common.h"
-#include "../logger.h"
-#include "./os.h"
+#include "spdlog/details/line_logger.h"
+#include "spdlog/logger.h"
+#include "spdlog/details/os.h"
 
 // Line logger class - aggregates operator<< calls to fast ostream
 // and logs upon destruction
@@ -35,53 +32,26 @@ namespace spdlog
 {
 namespace details
 {
-class line_logger
-{
-public:
-    line_logger(logger* callback_logger, level::level_enum msg_level, bool enabled):
-        _callback_logger(callback_logger),
-        _log_msg(msg_level),
-        _enabled(enabled)
-    {}
-
-    // No copy intended. Only move
-    line_logger(const line_logger& other) = delete;
-    line_logger& operator=(const line_logger&) = delete;
-    line_logger& operator=(line_logger&&) = delete;
-
-
-    line_logger(line_logger&& other) :
-        _callback_logger(other._callback_logger),
-        _log_msg(std::move(other._log_msg)),
-        _enabled(other._enabled)
-    {
-        other.disable();
-    }
-
     //Log the log message using the callback logger
-    ~line_logger()
+line_logger::~line_logger()
+{
+    if (_enabled)
     {
-        if (_enabled)
-        {
 #ifndef SPDLOG_NO_NAME
-            _log_msg.logger_name = _callback_logger->name();
+        _log_msg.logger_name = _callback_logger->name();
 #endif
 #ifndef SPDLOG_NO_DATETIME
-            _log_msg.time = os::now();
+        _log_msg.time = os::now();
 #endif
 
 #ifndef SPDLOG_NO_THREAD_ID
-            _log_msg.thread_id = os::thread_id();
+        _log_msg.thread_id = os::thread_id();
 #endif
-            _callback_logger->_log_msg(_log_msg);
-        }
+        _callback_logger->_log_msg(_log_msg);
     }
+}
 
-    //
-    // Support for format string with variadic args
-    //
-
-
+#if 0
     void write(const char* what)
     {
         if (_enabled)
@@ -211,12 +181,6 @@ public:
     {
         return _enabled;
     }
-
-
-private:
-    logger* _callback_logger;
-    log_msg _log_msg;
-    bool _enabled;
-};
-} //Namespace details
-} // Namespace spdlog
+#endif
+} // ns details
+} // ns spdlog

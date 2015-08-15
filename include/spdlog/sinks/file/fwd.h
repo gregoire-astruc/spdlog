@@ -23,49 +23,22 @@
 /*************************************************************************/
 
 #pragma once
-
-#include <iostream>
-#include <mutex>
-#include "./ostream_sink.h"
-#include "../details/null_mutex.h"
+#include "spdlog/details/fwd.h"
 
 namespace spdlog
 {
 namespace sinks
 {
+template<typename Mutex> class simple_file_sink;
+using simple_file_sink_mt = simple_file_sink<std::mutex>;
+using simple_file_sink_st = simple_file_sink<details::null_mutex>;
 
-template <class Mutex>
-class stdout_sink : public ostream_sink<Mutex>
-{
-    using MyType = stdout_sink<Mutex>;
-public:
-    stdout_sink() : ostream_sink<Mutex>(std::cout, true) {}
-    static std::shared_ptr<MyType> instance()
-    {
-        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
-        return instance;
-    }
-};
+template<typename Mutex> class rotating_file_sink;
+using rotating_file_sink_mt = rotating_file_sink<std::mutex>;
+using rotating_file_sink_st = rotating_file_sink<details::null_mutex>;
 
-typedef stdout_sink<details::null_mutex> stdout_sink_st;
-typedef stdout_sink<std::mutex> stdout_sink_mt;
-
-
-template <class Mutex>
-class stderr_sink : public ostream_sink<Mutex>
-{
-    using MyType = stderr_sink<Mutex>;
-public:
-    stderr_sink() : ostream_sink<Mutex>(std::cerr, true) {}
-    static std::shared_ptr<MyType> instance()
-    {
-        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
-        return instance;
-    }
-
-};
-
-typedef stderr_sink<std::mutex> stderr_sink_mt;
-typedef stderr_sink<details::null_mutex> stderr_sink_st;
-}
-}
+template<typename Mutex> class daily_file_sink;
+using daily_file_sink_mt = daily_file_sink<std::mutex>;
+using daily_file_sink_st = daily_file_sink<details::null_mutex>;
+} // ns sinks
+} // ns spdlog

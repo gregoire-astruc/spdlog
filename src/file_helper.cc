@@ -21,20 +21,81 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#pragma once
+#include "spdlog/details/file_helper.h"
+
+#include <thread>
+
+#include "spdlog/exception.h"
+#include "spdlog/details/os.h"
 
 namespace spdlog
 {
 namespace details
 {
-class log_msg;
-}
 
-class formatter
+void file_helper::open(const std::string& fname, bool truncate /* = false */)
 {
-public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
-};
+
+    close();
+    const char* mode = truncate ? "wb" : "ab";
+    _filename = fname;
+    for (int tries = 0; tries < open_tries; ++tries)
+    {
+        if (!os::fopen_s(&_fd, fname, mode))
+            return;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(open_interval));
+    }
+
+    throw spdlog_ex("Failed opening file " + fname + " for writing");
 }
 
+void file_helper::reopen(bool truncate)
+{
+    if (_filename.empty())
+        throw spdlog_ex("Failed re opening file - was not opened before");
+    open(_filename, truncate);
+
+}
+
+void file_helper::flush() {
+    std::fflush(_fd);
+}
+
+void file_helper::close()
+{
+    if (_fd)
+    {
+        std::fclose(_fd);
+        _fd = nullptr;
+    }
+}
+
+void file_helper::write(const log_msg& msg)
+{
+
+    size_t size = msg.formatted.size();
+    auto data = msg.formatted.data();
+    if (std::fwrite(data, 1, size, _fd) != size)
+        throw spdlog_ex("Failed writing to file " + _filename);
+
+    if (_force_flush)
+        std::fflush(_fd);
+
+}
+
+bool file_helper::file_exists(const std::string& name)
+{
+    FILE* file;
+    if (!os::fopen_s(&file, name.c_str(), "r"))
+    {
+        fclose(file);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+} // ns details
+} // ns spdlog

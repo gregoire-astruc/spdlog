@@ -23,10 +23,8 @@
 /*************************************************************************/
 
 #pragma once
-#include <type_traits>
-#include "../common.h"
-#include "../logger.h"
-#include "./os.h"
+#include "spdlog/details/log_msg.h"
+#include "spdlog/exception.h"
 
 // Line logger class - aggregates operator<< calls to fast ostream
 // and logs upon destruction
@@ -59,23 +57,7 @@ public:
     }
 
     //Log the log message using the callback logger
-    ~line_logger()
-    {
-        if (_enabled)
-        {
-#ifndef SPDLOG_NO_NAME
-            _log_msg.logger_name = _callback_logger->name();
-#endif
-#ifndef SPDLOG_NO_DATETIME
-            _log_msg.time = os::now();
-#endif
-
-#ifndef SPDLOG_NO_THREAD_ID
-            _log_msg.thread_id = os::thread_id();
-#endif
-            _callback_logger->_log_msg(_log_msg);
-        }
-    }
+    ~line_logger();
 
     //
     // Support for format string with variadic args

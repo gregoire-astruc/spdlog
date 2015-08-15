@@ -26,6 +26,8 @@
 #include "spdlog/level.h"
 #include "spdlog/async_logger.h"
 
+#include "spdlog/details/flag_formatter.h"
+
 namespace spdlog
 {
 namespace details

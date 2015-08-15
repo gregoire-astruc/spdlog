@@ -21,39 +21,72 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #pragma once
 #include "spdlog/sinks/base_sink.h"
-
-#include <ostream>
+#include "spdlog/sinks/file/fwd.h"
+#include "spdlog/details/file_helper.h"
+#include "spdlog/exception.h"
 
 namespace spdlog
 {
 namespace sinks
 {
+namespace utility
+{
+    std::chrono::system_clock::time_point next_rotation_tp(int hour, int min);
+
+    //Create filename for the form basename.YYYY-MM-DD.extension
+    std::string calc_filename(const std::string& basename, const std::string& extension);
+}
+/*
+* Rotating file sink based on date. rotates at midnight
+*/
 template<class Mutex>
-class ostream_sink: public base_sink<Mutex>
+class daily_file_sink :public base_sink < Mutex >
 {
 public:
-    explicit ostream_sink(std::ostream& os, bool force_flush=false) :_ostream(os), _force_flush(force_flush) {}
-    ostream_sink(const ostream_sink&) = delete;
-    ostream_sink& operator=(const ostream_sink&) = delete;
-    virtual ~ostream_sink() = default;
-
-protected:
-    void _sink_it(const details::log_msg& msg) override
+    //create daily file sink which rotates on given time
+    daily_file_sink(
+        const std::string& base_filename,
+        const std::string& extension,
+        int rotation_hour,
+        int rotation_minute,
+        bool force_flush = false) : _base_filename(base_filename),
+        _extension(extension),
+        _rotation_h(rotation_hour),
+        _rotation_m(rotation_minute),
+        _file_helper(force_flush)
     {
-        _ostream.write(msg.formatted.data(), msg.formatted.size());
-        if (_force_flush)
-            _ostream.flush();
+        if (rotation_hour < 0 || rotation_hour > 23 || rotation_minute < 0 || rotation_minute > 59)
+            throw spdlog_ex("daily_file_sink: Invalid rotation time in ctor");
+        _rotation_tp = utility::next_rotation_tp(_rotation_h, _rotation_m);
+        _file_helper.open(utility::calc_filename(_base_filename, _extension));
     }
 
     void flush() override
     {
-        _ostream.flush();
+        _file_helper.flush();
     }
 
-    std::ostream& _ostream;
-    bool _force_flush;
+protected:
+    void _sink_it(const details::log_msg& msg) override
+    {
+        if (std::chrono::system_clock::now() >= _rotation_tp)
+        {
+            _file_helper.open(utility::calc_filename(_base_filename, _extension));
+            _rotation_tp = utility::next_rotation_tp(_rotation_h, _rotation_m);
+        }
+        _file_helper.write(msg);
+    }
+
+private:
+    std::string _base_filename;
+    std::string _extension;
+    int _rotation_h;
+    int _rotation_m;
+    std::chrono::system_clock::time_point _rotation_tp;
+    details::file_helper _file_helper;
 };
-}
-}
+} // ns sinks
+} // ns spdlog

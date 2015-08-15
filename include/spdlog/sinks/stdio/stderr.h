@@ -21,20 +21,28 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #pragma once
+#include "spdlog/sinks/ostream_sink.h"
+
+#include <iostream>
 
 namespace spdlog
 {
-namespace details
+namespace sinks
 {
-class log_msg;
-}
-
-class formatter
+template <class Mutex>
+class stderr_sink : public ostream_sink<Mutex>
 {
+    using MyType = stderr_sink<Mutex>;
 public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
+    stderr_sink() : ostream_sink<Mutex>(std::cerr, true) {}
+    static std::shared_ptr<MyType> instance()
+    {
+        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
+        return instance;
+    }
+
 };
 }
-
+}

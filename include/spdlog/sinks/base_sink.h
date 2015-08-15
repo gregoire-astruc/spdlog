@@ -23,21 +23,14 @@
 /*************************************************************************/
 
 #pragma once
+#include <mutex>
+
+#include "spdlog/sinks/sink.h"
 //
 // base sink templated over a mutex (either dummy or realy)
 // concrete implementation should only overrid the _sink_it method.
 // all locking is taken care of here so no locking needed by the implementors..
 //
-
-#include<string>
-#include<mutex>
-#include<atomic>
-#include "./sink.h"
-#include "../formatter.h"
-#include "../common.h"
-#include "../details/log_msg.h"
-
-
 namespace spdlog
 {
 namespace sinks

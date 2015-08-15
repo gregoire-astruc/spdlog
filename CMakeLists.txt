@@ -8,6 +8,9 @@ set(${PROJECT_NAME}_SRCS
   src/format.cc
   src/registry.cc
   src/pattern_formatter.cc
+  src/line_logger.cc
+  src/file_helper.cc
+  src/daily.cc
 )
 
 add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SRCS})

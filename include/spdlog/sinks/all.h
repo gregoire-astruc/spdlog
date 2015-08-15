@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* spdlog - an extremely fast and easy to use c++11 logging library.     */
-/* Copyright (c) 2014 Gabi Melman.                                       */
+/* Copyright (c) 2015 Gregoire Astruc.                                   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -22,19 +22,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #pragma once
+#include "spdlog/sinks/fwd.h"
 
-namespace spdlog
-{
-namespace details
-{
-class log_msg;
-}
+#include "spdlog/sinks/null_sink.h"
+#include "spdlog/sinks/ostream_sink.h"
+#include "spdlog/sinks/syslog_sink.h"
 
-class formatter
-{
-public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
-};
-}
-
+#include "spdlog/sinks/file/all.h"
+#include "spdlog/sinks/stdio/all.h"

@@ -9,7 +9,6 @@
 #include <exception>
 
 #include "catch.hpp"
-#include "../include/spdlog/spdlog.h"
-#include "../include/spdlog/sinks/null_sink.h"
-#include "../include/spdlog/sinks/file_sinks.h"
-#include "../include/spdlog/sinks/ostream_sink.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/all.h"
+#include "spdlog/details/os.h"

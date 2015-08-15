@@ -47,22 +47,4 @@ using log_clock = std::chrono::system_clock;
 using sink_ptr = std::shared_ptr < sinks::sink >;
 using sinks_init_list = std::initializer_list < sink_ptr >;
 using formatter_ptr = std::shared_ptr<spdlog::formatter>;
-
-
-//
-// Log exception
-//
-class spdlog_ex : public std::exception
-{
-public:
-    spdlog_ex(const std::string& msg) :_msg(msg) {}
-    const char* what() const SPDLOG_NOEXCEPT override
-    {
-        return _msg.c_str();
-    }
-private:
-    std::string _msg;
-
-};
-
 } //spdlog

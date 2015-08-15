@@ -35,10 +35,10 @@
 #include <thread>
 #include <vector>
 
-
 #include "spdlog/fwd.h"
-#include "spdlog/common.h"
 #include "spdlog/details/concurrentqueue.h"
+
+#include "spdlog/details/compiler.h"
 
 namespace spdlog
 {

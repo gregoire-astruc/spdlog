@@ -27,10 +27,7 @@
 // Global registry functions
 //
 #include "spdlog/details/registry.h"
-#include "spdlog/sinks/file_sinks.h"
-#include "spdlog/sinks/stdout_sinks.h"
-#include "spdlog/sinks/syslog_sink.h"
-#include "spdlog/details/config.h"
+#include "spdlog/sinks/all.h"
 
 namespace spdlog
 {

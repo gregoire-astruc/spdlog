@@ -22,19 +22,26 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #pragma once
+#include "spdlog/sinks/ostream_sink.h"
+
+#include <iostream>
 
 namespace spdlog
 {
-namespace details
+namespace sinks
 {
-class log_msg;
-}
 
-class formatter
+template <class Mutex>
+class stdout_sink : public ostream_sink<Mutex>
 {
+    using MyType = stdout_sink<Mutex>;
 public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
+    stdout_sink() : ostream_sink<Mutex>(std::cout, true) {}
+    static std::shared_ptr<MyType> instance()
+    {
+        static std::shared_ptr<MyType> instance = std::make_shared<MyType>();
+        return instance;
+    }
 };
-}
-
+} // ns sinks
+} // ns spdlog

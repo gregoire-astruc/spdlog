@@ -25,14 +25,11 @@
 #pragma once
 
 #ifdef __linux__
+#include "spdlog/sinks/sink.h"
 
 #include <array>
 #include <string>
 #include <syslog.h>
-
-#include "./sink.h"
-#include "../common.h"
-#include "../details/log_msg.h"
 
 
 namespace spdlog

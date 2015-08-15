@@ -21,20 +21,39 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#pragma once
+#include "spdlog/sinks/file/daily.h"
+#include "spdlog/details/os.h"
 
 namespace spdlog
 {
-namespace details
+namespace sinks
 {
-class log_msg;
-}
-
-class formatter
+namespace utility
 {
-public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
-};
-}
+std::chrono::system_clock::time_point next_rotation_tp(int hour, int min)
+    {
+        using namespace std::chrono;
+        auto now = system_clock::now();
+        time_t tnow = std::chrono::system_clock::to_time_t(now);
+        tm date = spdlog::details::os::localtime(tnow);
+        date.tm_hour = hour;
+        date.tm_min = min;
+        date.tm_sec = 0;
+        auto rotation_time = std::chrono::system_clock::from_time_t(std::mktime(&date));
+        if (rotation_time > now)
+            return rotation_time;
+        else
+            return system_clock::time_point(rotation_time + hours(24));
+    }
 
+//Create filename for the form basename.YYYY-MM-DD.extension
+std::string calc_filename(const std::string& basename, const std::string& extension)
+{
+    std::tm tm = spdlog::details::os::localtime();
+    fmt::MemoryWriter w;
+    w.write("{}_{:04d}-{:02d}-{:02d}_{:02d}-{:02d}.{}", basename, tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, extension);
+    return w.str();
+}
+} // ns details
+} // ns sinks
+} // ns spdlog

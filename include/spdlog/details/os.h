@@ -23,9 +23,9 @@
 /*************************************************************************/
 
 #pragma once
-#include<string>
-#include<cstdio>
-#include<ctime>
+#include <string>
+#include <cstdio>
+#include <ctime>
 
 #ifdef _WIN32
 # ifndef WIN32_LEAN_AND_MEAN
@@ -43,8 +43,6 @@
 #else
 #include <thread>
 #endif
-
-#include "../common.h"
 
 namespace spdlog
 {

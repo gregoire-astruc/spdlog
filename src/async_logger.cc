@@ -22,6 +22,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "spdlog/async_logger.h"
+#include "spdlog/details/flag_formatter.h"
 
 #include "spdlog/details/async_log_helper.h"
 

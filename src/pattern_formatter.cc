@@ -21,14 +21,17 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#include "spdlog/formatter.h"
+#include "spdlog/formatters/pattern_formatter.h"
 
 #include <mutex>
+
+#include "spdlog/exception.h"
 
 #include "spdlog/details/flag_formatter.h"
 #include "spdlog/details/log_msg.h"
 #include "spdlog/details/os.h"
 #include "spdlog/details/config.h"
+
 
 namespace spdlog
 {

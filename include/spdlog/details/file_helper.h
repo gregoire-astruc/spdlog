@@ -21,19 +21,16 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-
 #pragma once
+#include <cstdio>
+#include <string>
+
+#include "spdlog/details/log_msg.h"
 
 // Helper class for file sink
 // When failing to open a file, retry several times(5) with small delay between the tries(10 ms)
 // Can be set to auto flush on every line
 // Throw spdlog_ex exception on errors
-#include <thread>
-#include <string>
-#include <chrono>
-
-#include "os.h"
-
 namespace spdlog
 {
 namespace details
@@ -59,82 +56,27 @@ public:
     }
 
 
-    void open(const std::string& fname, bool truncate = false)
-    {
+    void open(const std::string& fname, bool truncate = false);
 
-        close();
-        const char* mode = truncate ? "wb" : "ab";
-        _filename = fname;
-        for (int tries = 0; tries < open_tries; ++tries)
-        {
-            if (!os::fopen_s(&_fd, fname, mode))
-                return;
+    void reopen(bool truncate);
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(open_interval));
-        }
+    void flush();
 
-        throw spdlog_ex("Failed opening file " + fname + " for writing");
-    }
+    void close();
 
-    void reopen(bool truncate)
-    {
-        if (_filename.empty())
-            throw spdlog_ex("Failed re opening file - was not opened before");
-        open(_filename, truncate);
-
-    }
-
-    void flush() {
-        std::fflush(_fd);
-    }
-
-    void close()
-    {
-        if (_fd)
-        {
-            std::fclose(_fd);
-            _fd = nullptr;
-        }
-    }
-
-    void write(const log_msg& msg)
-    {
-
-        size_t size = msg.formatted.size();
-        auto data = msg.formatted.data();
-        if (std::fwrite(data, 1, size, _fd) != size)
-            throw spdlog_ex("Failed writing to file " + _filename);
-
-        if (_force_flush)
-            std::fflush(_fd);
-
-    }
+    void write(const log_msg& msg);
 
     const std::string& filename() const
     {
         return _filename;
     }
 
-    static bool file_exists(const std::string& name)
-    {
-        FILE* file;
-        if (!os::fopen_s(&file, name.c_str(), "r"))
-        {
-            fclose(file);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    static bool file_exists(const std::string& name);
 
 private:
     FILE* _fd;
     std::string _filename;
     bool _force_flush;
-
-
 };
 }
 }

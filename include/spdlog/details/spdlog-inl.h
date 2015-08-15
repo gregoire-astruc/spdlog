@@ -27,7 +27,7 @@
 //
 // Global registry functions
 //
-#include "./registry.h"
+#include "spdlog/details/registry.h"
 
 template <typename Sink, typename... Args>
 std::shared_ptr<spdlog::logger> spdlog::create(const std::string& logger_name, const Args&... args)

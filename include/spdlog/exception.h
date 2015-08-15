@@ -1,6 +1,6 @@
 /*************************************************************************/
 /* spdlog - an extremely fast and easy to use c++11 logging library.     */
-/* Copyright (c) 2014 Gabi Melman.                                       */
+/* Copyright (c) 2015 Gregoire Astruc.                                   */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -22,19 +22,24 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #pragma once
+#include <string>
+#include <exception>
 
+#include "spdlog/details/compiler.h"
 namespace spdlog
 {
-namespace details
-{
-class log_msg;
-}
-
-class formatter
+//
+// Log exception
+//
+class spdlog_ex : public std::exception
 {
 public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
+    spdlog_ex(const std::string& msg) :_msg(msg) {}
+    const char* what() const SPDLOG_NOEXCEPT override
+    {
+        return _msg.c_str();
+    }
+private:
+    std::string _msg;
 };
 }
-

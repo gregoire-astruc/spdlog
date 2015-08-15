@@ -21,20 +21,42 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+
 #pragma once
+#include "spdlog/sinks/base_sink.h"
+#include "spdlog/sinks/file/fwd.h"
+
+#include "spdlog/details/file_helper.h"
 
 namespace spdlog
 {
-namespace details
+namespace sinks
 {
-class log_msg;
-}
-
-class formatter
+/*
+* Trivial file sink with single file as target
+*/
+template<class Mutex>
+class simple_file_sink : public base_sink < Mutex >
 {
 public:
-    virtual ~formatter() = default;
-    virtual void format(details::log_msg& msg) = 0;
-};
-}
+    explicit simple_file_sink(const std::string &filename,
+                              bool force_flush = false) :
+        _file_helper(force_flush)
+    {
+        _file_helper.open(filename);
+    }
+    void flush() override
+    {
+        _file_helper.flush();
+    }
 
+protected:
+    void _sink_it(const details::log_msg& msg) override
+    {
+        _file_helper.write(msg);
+    }
+private:
+    details::file_helper _file_helper;
+};
+} // ns sinks
+} // ns spdlog
