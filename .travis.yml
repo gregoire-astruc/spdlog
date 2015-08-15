@@ -75,14 +75,10 @@ before_install:
   - which $CC
   - which valgrind
   - if [ -n "$CLANG_VERSION" ]; then sudo CXX=$CXX CC=$CC ./tests/install_libcxx.sh; fi
-  - wget http://www.cmake.org/files/v3.3/cmake-3.3.1.tar.gz
-  - tar xzf cmake-3.3.1.tar.gz
-  - cd cmake-3.3.1
-  - ./bootstrap --prefix=.
-  - make
-  - make install
-  - cd ..
-  - export PATH=$PATH:$(pwd)/cmake-3.3.1/bin
+  - wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz
+  - tar xzf cmake-3.3.1-Linux-x86_64.tar.gz
+  - export PATH=$PATH:$(pwd)/cmake-3.3.1-Linux-x86_64.tar.gz/bin
+  - cmake --version
 
 install:
   - cd $CHECKOUT_PATH
