@@ -1,6 +1,6 @@
 # spdlog
 
-Very fast, header only, C++ logging library. [![Build Status](https://travis-ci.org/gabime/spdlog.svg?branch=master)](https://travis-ci.org/gabime/spdlog)
+Very fast, header only, C++ logging library. [![Build Status](https://travis-ci.org/gregoire-astruc/spdlog.svg?branch=full-fledge-library)](https://travis-ci.org/gabime/spdlog)
 
 ## Install
 Just copy the files to your build tree and use a C++11 compiler
