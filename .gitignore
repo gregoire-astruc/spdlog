@@ -32,5 +32,6 @@ example/*
 !example/utils.h
 !example/makefile
 !example/makefile.clang
+!example/CMakeLists.txt
 
 
