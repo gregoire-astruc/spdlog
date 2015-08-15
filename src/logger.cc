@@ -22,7 +22,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "spdlog/logger.h"
-#include "spdlog/details/flag_formatter.h"
+
+#include <memory>
+
+#include "spdlog/details/line_logger.h"
+#include "spdlog/formatters/pattern_formatter.h"
 #include "spdlog/sinks/sink.h"
 
 // ctor with sinks as init list

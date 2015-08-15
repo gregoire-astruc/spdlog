@@ -24,7 +24,6 @@
 
 #pragma once
 #include "spdlog/formatters/pattern_formatter.h"
-#include "spdlog/level.h"
 #include "spdlog/details/line_logger.h"
 
 // create logger with given name, sinks and the default pattern formatter

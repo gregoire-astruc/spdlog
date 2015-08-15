@@ -27,14 +27,10 @@
 #include <vector>
 
 #include "spdlog/formatter.h"
+#include "spdlog/details/flag_formatter.h"
 
 namespace spdlog
 {
-namespace details
-{
-class flag_formatter;
-}
-
 class pattern_formatter : public formatter
 {
 

@@ -27,6 +27,8 @@ namespace spdlog
 {
 namespace details
 {
+    class flag_formatter;
+    class line_logger;
     class log_msg;
     class null_mutex;
 } // ns details

@@ -33,11 +33,14 @@
 //    2. Push a new copy of the message to a queue (or block the caller until space is available in the queue)
 //    3. will throw spdlog_ex upon log exceptions
 // Upong destruction, logs all remaining messages in the queue before destructing..
-
 #include <chrono>
 #include <functional>
+#include <memory>
+#include <string>
 
 #include "logger.h"
+#include "spdlog/details/async_log_helper.h"
+#include "spdlog/fwd.h"
 
 
 namespace spdlog

@@ -32,10 +32,12 @@
 // 3. Pass the formatted message to its sinks to performa the actual logging
 
 #include <atomic>
+#include <string>
 #include <vector>
-#include <memory>
 
-#include "fwd.h"
+
+#include "spdlog/fwd.h"
+#include "spdlog/level.h"
 
 namespace spdlog
 {

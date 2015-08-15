@@ -23,12 +23,12 @@
 /*************************************************************************/
 #pragma once
 #include <ctime>
+#include "spdlog/details/fwd.h"
 
 namespace spdlog
 {
 namespace details
 {
-class log_msg;
 class flag_formatter
 {
 public:

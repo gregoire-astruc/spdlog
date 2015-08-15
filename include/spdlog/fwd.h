@@ -57,3 +57,5 @@ enum class async_overflow_policy;
 
 class spdlog_ex;
 } //spdlog
+
+#include "spdlog/details/fwd.h"
