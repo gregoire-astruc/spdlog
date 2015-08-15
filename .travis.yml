@@ -3,7 +3,6 @@
 # - Paul Fultz II's FIT: https://github.com/pfultz2/Fit
 # - Eric Niebler's range-v3: https://github.com/ericniebler/range-v3
 language: cpp
-sudo: false
 
 # Test matrix:
 # - Build matrix per compiler: C++11/C++14 + Debug/Release
