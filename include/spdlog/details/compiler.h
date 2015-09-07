@@ -1,9 +1,11 @@
 #pragma once
 //visual studio does not support noexcept yet
 #ifndef _MSC_VER
-#define SPDLOG_NOEXCEPT noexcept
+#  define SPDLOG_NOEXCEPT noexcept
 #else
-#if _MSC_VER < 1900
-#define SPDLOG_NOEXCEPT throw()
-#endif
+#  if _MSC_VER < 1900
+#    define SPDLOG_NOEXCEPT throw()
+#  else
+#    define SPDLOG_NOEXCEPT noexcept
+#  endif
 #endif
